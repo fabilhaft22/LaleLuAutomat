@@ -3,12 +3,18 @@ import Utils.List;
 public class Parser {
 
     private List<Token> tokenliste;
+    private boolean fehler;
+
+    private Token aktuellesToken;
 
     public Parser(List<Token> pTokenliste){
         this.tokenliste = pTokenliste;
         this.tokenliste.toFirst();
+        this.fehler = false;
+        this.aktuellesToken = null;
     }
 
+    @SuppressWarnings("ReassignedVariable")
     public Token nextToken(){
         Token aktToken = tokenliste.getContent();
         Token nextToken = null;
@@ -21,19 +27,39 @@ public class Parser {
     }
 
     public boolean parse() {
-        //TODO
+        this.tokenliste.toFirst();
+
+        this.aktuellesToken = this.tokenliste.getContent();
+        if(pruefeS()) tokenliste.remove();
+        else return (this.fehler = true);
+
+        this.aktuellesToken = this.tokenliste.getContent();
+        if(pruefeA()) tokenliste.remove();
+        else return (this.fehler = true);
+
+        this.aktuellesToken = this.tokenliste.getContent();
+        if(pruefeB()) tokenliste.remove();
+        else return (this.fehler = true);
+
+        return !tokenliste.isEmpty();
+    }
+
+    public boolean pruefeS(){
+        String tokenWert = this.aktuellesToken.getWert();
+
+        if(tokenWert.equals("la"))return true;
+        if(tokenWert.equals("le"))return true;
+        if(tokenWert.equals("lu"))return true;
+
         return false;
     }
-    public boolean pruefeS(){
-        //TODO
-        return true;
-    }
     public boolean pruefeA(){
-        //TODO
-        return true;
+        return pruefeS();
     }
     public boolean pruefeB(){
-        //TODO
-        return true;
+        String tokenWert = this.aktuellesToken.getWert();
+        if(tokenWert.equals("lu"))return true;
+
+        return false;
     }
 }
